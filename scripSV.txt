@@ -1,0 +1,135 @@
+drop database if exists Proyecto;
+create database Proyecto;
+use Proyecto;
+
+create table Zona(
+cod_zon integer auto_increment primary key,
+nom_zon varchar(30) not null
+)ENGINE=InnoDB auto_increment=61;
+
+create table Cargo(
+cod_car integer auto_increment primary key,
+nom_car varchar(30) not null,
+des_car varchar(255) default 'sin descripcion de cargo'
+)ENGINE=InnoDB auto_increment=21;
+
+create table Direccion(
+cod_dir integer auto_increment primary key,
+cod_zon integer not null,
+ubi_dir varchar(100) not null,
+cel_fijo_dir varchar(12) not null,
+cod_pos_dir varchar(5) not null,
+foreign key (cod_zon) references Zona (cod_zon)
+)ENGINE=InnoDB auto_increment=501;
+
+create table Usuario(
+cod_usu integer auto_increment primary key,
+cod_dir integer not null,
+cod_car integer not null,
+nom_usu varchar(50) not null,
+ape_usu varchar(50) not null,
+dni_usu varchar(8) not null unique,
+cel_usu varchar(9) not null unique,
+gmail_usu varchar(50) not null unique,
+usu_usu varchar(30) not null unique,
+pas_usu varchar(30) not null,
+foreign key (cod_dir) references Direccion (cod_dir),
+foreign key (cod_car) references Cargo (cod_car)
+)ENGINE=InnoDB auto_increment=101;
+
+create table Forma_Pago(
+cod_for_pag integer auto_increment primary key,
+des_for_pag varchar(50) not null
+)ENGINE=InnoDB auto_increment=1;
+
+create table Tiempo_Prestamo(
+cod_tie_pre integer auto_increment primary key,
+des_tie_pre varchar(50) not null
+)ENGINE=InnoDB auto_increment=41;
+
+
+create table estado(
+id_estado int auto_increment primary key,
+descripcion varchar(50)
+)ENGINE=InnoDB auto_increment=301;
+
+create table Prestamo(
+cod_pre integer auto_increment primary key,
+cod_prestatario integer not null,
+cod_prestamista integer default null,
+id_estado int,
+foreign key (cod_prestatario) references Usuario (cod_usu),
+foreign key (cod_prestamista) references Usuario (cod_usu),
+foreign key (id_estado) references estado (id_estado)
+)ENGINE=InnoDB auto_increment=1001;
+
+create table nacionalidad
+(
+id_nacionalidad integer primary key,
+descripcion varchar(50)
+)ENGINE=InnoDB auto_increment=1;
+
+create table Solicitud(
+id_solicitud int auto_increment primary key,
+cod_usu int,
+cod_pre int,
+cod_tie_pre integer not null,
+cod_for_pag integer not null,
+id_nacionalidad int,
+fecha_solicitud date default null,
+monto double(8,2) not null,
+foreign key (id_nacionalidad) references nacionalidad (id_nacionalidad),
+foreign key (cod_usu) references Usuario (cod_usu),
+foreign key (cod_pre) references Prestamo (cod_pre),
+foreign key (cod_tie_pre) references Tiempo_Prestamo (cod_tie_pre),
+foreign key (cod_for_pag) references Forma_pago (cod_for_pag)
+)ENGINE=InnoDB auto_increment=201;
+select * from Solicitud;
+
+/*
+
+
+
+/**********  */
+/* Ingreso de Datos */
+/**********  */
+
+show tables;
+
+insert into Zona (nom_zon) values 
+('Miraflores'),
+('Cercado de Lima'),
+('Rivaguero'),
+('Santa Anita'),
+('San Luis'),
+('San Juan de Lurigancho'),
+('Surco');
+select * from Zona;
+
+insert into Cargo (nom_car,des_car) values 
+('administrador','encargado de la gestion del software'),
+('Prestamista','encargado de gestionar los prestamos'),
+('Prestatario','persona natural que pide prestamo'),
+('Inversionista','pesona natural que hace inversiones'),
+('Jefe de Prestamista','encargado de gestionar el progreso de los prestamistas');
+select * from Cargo;
+
+insert into Forma_Pago (des_for_pag) values
+('por yape'),
+('Cada 20 dias'),
+('cada 30 dias'),
+('cada 40 dias');
+select * from Forma_Pago;
+
+insert into Tiempo_Prestamo (des_tie_pre) values 
+('por 3 meses'),
+('por 6 meses'),
+('por 9 meses'),
+('por 12 meses');
+select * from Tiempo_Prestamo;
+
+insert into Direccion (cod_zon,ubi_dir,cel_fijo_dir,cod_pos_dir) values (62,'Urb Mazanilla Etapa 1','01-458451','15018');
+select * from Direccion;
+
+insert into Usuario (cod_dir,cod_car,nom_usu,ape_usu,dni_usu,cel_usu,gmail_usu,usu_usu,pas_usu) values (501,21,'Jhordan Aldair','Via Pese','74442115','524124645','alalaal.gmail.com','admin','admin');
+select * from Usuario;
